@@ -39,6 +39,7 @@
             <input type="submit" value="Wyślij">
 
     </form>
+    <div id="errory" style="color: red"></div>
     <div id="diw"></div>
 </body>
 </html>
@@ -112,6 +113,13 @@ function isValidISBN(str) {
     }
 } */
 
+const inputpesel = document.querySelector('input[name="pesel"]')
+
+inputpesel.addEventListener("change", function() {
+        if (inputpesel.value.length != 11) inputpesel.style.color = "red";
+        else inputpesel.style.color = "black";
+    })
+
 formularz.addEventListener("submit", function() {
     const imie = document.querySelector('input[name="imie"]').value;
     const nazwisko = document.querySelector('input[name="nazwisko"]').value;
@@ -127,16 +135,20 @@ formularz.addEventListener("submit", function() {
     const ewidencyjny = parseInt(document.querySelector('input[name="ewidencyjny"]').value);
     const uwagi = document.querySelector('input[name="uwagi"]').value;
     const diw = document.getElementById("diw");
+    const errory = document.getElementById("errory");
 
-    if (imie.length <= 2 || hasNumber(imie)) alert("Nieprawidłowe imie")
-    else if (nazwisko.length <= 2 || hasNumber(nazwisko)) alert("Nieprawidłowe nazwisko")
-    else if (!isValidPesel(pesel)) alert("Nieprawidłowy numer PESEL")
+    
+
+    errory.innerHTML = ("");
+    if (imie.length <= 2 || hasNumber(imie)) errory.innerHTML += ("Nieprawidłowe imie<br>")
+    else if (nazwisko.length <= 2 || hasNumber(nazwisko)) errory.innerHTML += ("Nieprawidłowe nazwisko<br>")
+    else if (!isValidPesel(pesel)) errory.innerHTML += ("Nieprawidłowy numer PESEL<br>")
     //else if (plec.value != "mezczyzna" || plec.value != "kobieta") alert("Nieprawidłowa płeć")  
-    else if (telefon.length != 9) alert("Nieprawidłowy numer telefonu")
-    else if (!tytul.length) alert("Nieprawidłowy tytuł")
-    else if (!wydawca.length) alert("Nieprawidłowy wydawca")
-    else if (/[a-zA-Z]/.test(isbn)) alert("Nieprawidłowy ISBN")
-    else if (isNaN(ewidencyjny)) alert("Nieprawidłowy numer ewidencyjny")
+    else if (telefon.length != 9) errory.innerHTML += ("Nieprawidłowy numer telefonu<br>")
+    else if (!tytul.length) errory.innerHTML += ("Nieprawidłowy tytuł<br>")
+    else if (!wydawca.length) errory.innerHTML += ("Nieprawidłowy wydawca<br>")
+    else if (/[a-zA-Z]/.test(isbn)) errory.innerHTML += ("Nieprawidłowy ISBN<br>")
+    else if (isNaN(ewidencyjny)) errory.innerHTML += ("Nieprawidłowy numer ewidencyjny<br>")
     else {
         diw.innerHTML = (`
         Dziękujemy za przesłanie formularza!<br>
