@@ -5,6 +5,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="author" content="Kamil Korzeniewski 4D">
+    <link rel="stylesheet" href="style.css">
     <title>folmularze</title>
 </head>
 <body>
@@ -47,9 +48,6 @@
 <script type="text/javascript">
 
 const formularz = document.querySelector('form');
-formularz.addEventListener("submit", function(event) {
-    event.preventDefault();
-})
 
 function isValidPesel(pesel) {
         if (/[a-zA-Z]/.test(pesel)) return false;
@@ -66,8 +64,18 @@ function isValidPesel(pesel) {
         }
     }
 
-function hasNumber(myString) {
-    return /\d/.test(myString);
+function isValidEmail(mail) 
+{
+    if (/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(mail)) return true
+    else return false
+}
+
+function hasNumber(str) {
+    return /\d/.test(str);
+}
+
+function changecolor(x, y) {
+    x.style.color = y;
 }
 /*
 function isValidISBN(str) {
@@ -113,27 +121,57 @@ function isValidISBN(str) {
     }
 } */
 
+const inputimie = document.querySelector('input[name="imie"]')
+const inputnazwisko = document.querySelector('input[name="nazwisko"]')
+const inputwiek = document.querySelector('input[name="wiek"]')
+const inputmail = document.querySelector('input[name="mail"]')
 const inputpesel = document.querySelector('input[name="pesel"]')
+const inputplec = document.querySelector('input[name="plec"]')
+const inputtelefon = document.querySelector('input[name="telefon"]')
+const inputklasa = document.querySelector('input[name="klasa"]')
+const inputtytul = document.querySelector('input[name="tytul"]')
+const inputwydawca = document.querySelector('input[name="wydawca"]')
+const inputisbn = document.querySelector('input[name="isbn"]')
+const inputewidencyjny = document.querySelector('input[name="ewidencyjny"]')
+const inputuwagi = document.querySelector('input[name="uwagi"]')
 
-inputpesel.addEventListener("change", function() {
-        if (inputpesel.value.length != 11) inputpesel.style.color = "red";
-        else inputpesel.style.color = "black";
-    })
+const r = "red";
+const bl = "black";
 
-formularz.addEventListener("submit", function() {
-    const imie = document.querySelector('input[name="imie"]').value;
-    const nazwisko = document.querySelector('input[name="nazwisko"]').value;
-    const wiek = document.querySelector('input[name="wiek"]').value;
-    const mail = document.querySelector('input[name="mail"]').value;
-    const pesel = document.querySelector('input[name="pesel"]').value;
-    const plec = document.querySelector('input[name="plec"]').value;
-    const telefon = document.querySelector('input[name="telefon"]').value;
-    const klasa = document.querySelector('input[name="klasa"]').value;
-    const tytul = document.querySelector('input[name="tytul"]').value;
-    const wydawca = document.querySelector('input[name="wydawca"]').value;
-    const isbn = document.querySelector('input[name="isbn"]').value;
-    const ewidencyjny = parseInt(document.querySelector('input[name="ewidencyjny"]').value);
-    const uwagi = document.querySelector('input[name="uwagi"]').value;
+formularz.addEventListener("input", function() {      
+    if (inputimie.value.length <= 2 || hasNumber(inputimie.value)) changecolor(inputimie, r)
+        else changecolor(inputimie, bl)
+    if (inputnazwisko.value.length <= 2 || hasNumber(inputnazwisko.value)) changecolor(inputnazwisko, r)
+        else changecolor(inputnazwisko, bl)
+    if (!isValidEmail(inputmail.value)) changecolor(inputmail, r)
+        else changecolor(inputmail, bl)
+    if (!isValidPesel(inputpesel.value)) changecolor(inputpesel, r)
+        else changecolor(inputpesel, bl)
+    if (isNaN(inputwiek.value) || inputwiek.value > 122 || inputwiek.value < 0) changecolor(inputwiek, r)
+        else changecolor(inputwiek, bl)
+    if (inputklasa.value.length != 2 || isNaN(inputklasa.value[0]) || !isNaN(inputklasa.value[1])) changecolor(inputklasa, r)
+        else changecolor(inputklasa, bl)
+    if (inputtelefon.value.length != 9) changecolor(inputtelefon, r)
+        else changecolor(inputtelefon, bl)
+    if (!inputewidencyjny.value) changecolor(inputewidencyjny, r)
+        else changecolor(inputewidencyjny, bl)
+})
+
+formularz.addEventListener("submit", function(event) {
+    event.preventDefault();
+    const imie = inputimie.value;
+    const nazwisko = inputnazwisko.value;
+    const wiek = inputwiek.value;
+    const mail = inputmail.value;
+    const pesel = inputpesel.value;
+    const plec = inputplec.value;
+    const telefon = inputtelefon.value;
+    const klasa = inputklasa.value;
+    const tytul = inputtytul.value;
+    const wydawca = inputwydawca.value;
+    const isbn = inputisbn.value;
+    const ewidencyjny = parseInt(inputewidencyjny.value);
+    const uwagi = inputuwagi.value;
     const diw = document.getElementById("diw");
     const errory = document.getElementById("errory");
 
@@ -143,6 +181,7 @@ formularz.addEventListener("submit", function() {
     if (imie.length <= 2 || hasNumber(imie)) errory.innerHTML += ("Nieprawidłowe imie<br>")
     else if (nazwisko.length <= 2 || hasNumber(nazwisko)) errory.innerHTML += ("Nieprawidłowe nazwisko<br>")
     else if (!isValidPesel(pesel)) errory.innerHTML += ("Nieprawidłowy numer PESEL<br>")
+    else if (!isValidEmail(mail)) errory.innerHTML += ("Nieprawidłowy e-mail<br>")
     //else if (plec.value != "mezczyzna" || plec.value != "kobieta") alert("Nieprawidłowa płeć")  
     else if (telefon.length != 9) errory.innerHTML += ("Nieprawidłowy numer telefonu<br>")
     else if (!tytul.length) errory.innerHTML += ("Nieprawidłowy tytuł<br>")
@@ -160,16 +199,17 @@ formularz.addEventListener("submit", function() {
         tytul: ${tytul}<br>
         wydawca: ${wydawca}<br>
         isbn: ${isbn}<br>
+        number ewidencyjny: ${ewidencyjny}<br>
         `)
         
         if (uwagi) diw.innerHTML += (`uwagi: ${uwagi}<br>`)
         
         if (wiek) {
-            if (isNaN(wiek) || wiek > 122) diw.innerHTML += ("<br>Podano nieprawidłowy wiek, nie został on przesłany")
+            if (isNaN(wiek) || wiek > 122 || inputwiek.value < 0) errory.innerHTML += ("<br>Podano nieprawidłowy wiek, nie został on przesłany")
             else diw.innerHTML += (`wiek: ${wiek}<br>`)
         }
         if (klasa) {
-            if (klasa.length != 2 || isNaN(klasa[0]) || !isNaN(klasa[1])) diw.innerHTML += ("<br>Podano nieprawidłową klasę, nie została ona przesłana")
+            if (klasa.length != 2 || isNaN(klasa[0]) || !isNaN(klasa[1])) errory.innerHTML += ("<br>Podano nieprawidłową klasę, nie została ona przesłana")
             else diw.innerHTML += (`klasa: ${klasa}<br>`)
         }
         
